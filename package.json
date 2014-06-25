@@ -1,0 +1,50 @@
+{
+  "name": "flow-reduce",
+  "version": "0.0.0",
+  "description": "Through stream which performs a data reduction.",
+  "author": {
+    "name": "Athan Reines",
+    "email": "athan@nodeprime.com"
+  },
+  "contributors": [
+    {
+      "name": "Athan Reines",
+      "email": "athan@nodeprime.com"
+    }
+  ],
+  "scripts": {
+    "test": "mocha"
+  },
+  "main": "./lib",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kgryte/flow-reduce.git"
+  },
+  "keywords": [
+    "stream",
+    "writable",
+    "readable",
+    "transform",
+    "through",
+    "reduce",
+    "flow",
+    "flow.io"
+  ],
+  "bugs": {
+    "url": "https://github.com/kgryte/flow-reduce/issues"
+  },
+  "dependencies": {
+    "through": "~2.3.4"
+  },
+  "devDependencies": {
+    "mocha": "1.x.x",
+    "chai": "1.x.x",
+    "stream-spec": "~0.3.5"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ]
+}
