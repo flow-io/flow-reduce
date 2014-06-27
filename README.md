@@ -32,8 +32,8 @@ stream.on( 'data', function( data ) {
 });
 
 // Write the data to the stream:
-for ( var i = 0; i < data.length; i++ ) {
-	stream.write( data[ i ] );
+for ( var j = 0; j < data.length; j++ ) {
+	stream.write( data[ j ] );
 }
 stream.end();
 ```
