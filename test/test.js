@@ -11,7 +11,7 @@ var // Expectation library:
 	utils = require( './utils' ),
 
 	// Module to be tested:
-	stream = require( './../lib' );
+	rStream = require( './../lib' );
 
 
 // VARIABLES //
@@ -26,11 +26,11 @@ describe( 'reduce', function tests() {
 	'use strict';
 
 	it( 'should export a factory function', function test() {
-		expect( stream ).to.be.a( 'function' );
+		expect( rStream ).to.be.a( 'function' );
 	});
 
 	it( 'should throw an error if a reduce function and accumulator are not provided', function test() {
-		expect( stream ).to.throw( Error );
+		expect( rStream().stream ).to.throw( Error );
 		expect( getStream ).to.throw( Error );
 		return;
 
@@ -41,16 +41,42 @@ describe( 'reduce', function tests() {
 		* @returns {Stream} reduce stream
 		*/
 		function getStream() {
-			return stream( function reduce( count, x ) {
+			return rStream().stream( function reduce( count, x ) {
 				return count + 1;
 			});
 		} // end FUNCTION getStream()
 	});
 
+	it( 'should throw an error if the first argument to the stream method is not a function', function test() {
+		expect( badValue( '5' ) ).to.throw( Error );
+		expect( badValue( 5 ) ).to.throw( Error );
+		expect( badValue( [] ) ).to.throw( Error );
+		expect( badValue( {} ) ).to.throw( Error );
+		expect( badValue( true ) ).to.throw( Error );
+		expect( badValue( null ) ).to.throw( Error );
+		expect( badValue( undefined ) ).to.throw( Error );
+		return;
+
+		/**
+		* FUNCTION: badValue( value )
+		*	Supplies an invalid argument to the stream generator.
+		*
+		* @param {*} value - bad value
+		* @returns {function} stream generator
+		*/
+		function badValue( value ) {
+			return function() {
+				rStream().stream( value, 0 );
+			};
+		} // end FUNCTION getStream()
+	});
+
+	
+
 	it( 'should return a single value', function test() {
 		var numData = 1000,
 			expected = new Array( numData ),
-			rStream, s,
+			stream, s,
 
 			// Return last value:
 			reduce = function ( acc, val ) {
@@ -64,20 +90,20 @@ describe( 'reduce', function tests() {
 		}
 
 		// Create a new reduce stream:
-		rStream = stream( reduce, 0 );
+		stream = rStream().stream( reduce, 0 );
 
 		// Create the stream spec:
-		s = spec( rStream )
+		s = spec( stream )
 			.through();
 
 		// Mock reading from the stream:
-		utils.readStream( rStream, onRead );
+		utils.readStream( stream, onRead );
 
 		// Validate the stream when the stream closes:
-		rStream.on( 'close', s.validate );
+		stream.on( 'close', s.validate );
 
 		// Mock piping a data to the stream:
-		utils.writeStream( expected, rStream );
+		utils.writeStream( expected, stream );
 
 		return;
 
@@ -94,7 +120,7 @@ describe( 'reduce', function tests() {
 
 	it( 'should allow for arbitrary reduce functions', function test() {
 		var expected = new Array( 10 ),
-			rStream,
+			stream,
 
 			// Compute a factorial:
 			reduce = function ( acc, val ) {
@@ -108,13 +134,13 @@ describe( 'reduce', function tests() {
 		}
 
 		// Create a new reduce stream:
-		rStream = stream( reduce, 1 );
+		stream = rStream().stream( reduce, 1 );
 
 		// Mock reading from the stream:
-		utils.readStream( rStream, onRead );
+		utils.readStream( stream, onRead );
 
 		// Mock piping a data to the stream:
-		utils.writeStream( expected, rStream );
+		utils.writeStream( expected, stream );
 
 		return;
 
