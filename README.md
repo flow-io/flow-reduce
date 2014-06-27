@@ -19,10 +19,12 @@ for ( var i = 0; i < 1000; i++ ) {
 }
 
 // Create a new stream (counter):
-stream = rStream(
-	function( acc, d ){
+stream = rStream()
+	.reduce( function( acc, d ){
 		return acc+1;
-	}, 0 ).stream();
+	})
+	.acc( 0 )
+	.stream();
 
 // Add a listener:
 stream.on( 'data', function( data ) {
