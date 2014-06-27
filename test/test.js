@@ -29,49 +29,78 @@ describe( 'reduce', function tests() {
 		expect( rStream ).to.be.a( 'function' );
 	});
 
-	it( 'should throw an error if a reduce function and accumulator are not provided', function test() {
-		expect( rStream().stream ).to.throw( Error );
-		expect( getStream ).to.throw( Error );
-		return;
-
-		/**
-		* FUNCTION: getStream()
-		*	Supplies a single argument to the stream generator.
-		*
-		* @returns {Stream} reduce stream
-		*/
-		function getStream() {
-			return rStream().stream( function reduce( count, x ) {
-				return count + 1;
-			});
-		} // end FUNCTION getStream()
+	it( 'should provide a method to get the initial accumulator value', function test() {
+		var stream = rStream();
+		expect( stream.value ).to.be.a( 'function' );
 	});
 
-	it( 'should throw an error if the first argument to the stream method is not a function', function test() {
+	it( 'should provide a method to set the initial accumulator value', function test() {
+		var stream = rStream();
+		stream.value( 5 );
+		assert.strictEqual( stream.value(), 5 );
+	});
+
+	it( 'should not allow a non-numeric initial accumulator value', function test() {
+		var stream = rStream();
+		
+		expect( badValue( '5' ) ).to.throw( Error );
+		expect( badValue( [] ) ).to.throw( Error );
+		expect( badValue( {} ) ).to.throw( Error );
+		expect( badValue( null ) ).to.throw( Error );
+		expect( badValue( undefined ) ).to.throw( Error );
+		expect( badValue( NaN ) ).to.throw( Error );
+		expect( badValue( function() {} ) ).to.throw( Error );
+
+		function badValue( value ) {
+			return function() {
+				stream.value( value );
+			};
+		}
+	});
+
+	it( 'should provide a method to get the reduce function', function test() {
+		var stream = rStream();
+		expect( stream.reduce ).to.be.a( 'function' );
+	});
+
+	it( 'should provide a method to set the reduce function', function test() {
+		var stream = rStream();
+		stream.value( 5 );
+		assert.strictEqual( stream.value(), 5 );
+	});
+
+	it( 'should not allow the reducer to be set to anything other than a function', function test() {
+		var stream = rStream();
+		
 		expect( badValue( '5' ) ).to.throw( Error );
 		expect( badValue( 5 ) ).to.throw( Error );
 		expect( badValue( [] ) ).to.throw( Error );
 		expect( badValue( {} ) ).to.throw( Error );
-		expect( badValue( true ) ).to.throw( Error );
 		expect( badValue( null ) ).to.throw( Error );
 		expect( badValue( undefined ) ).to.throw( Error );
-		return;
+		expect( badValue( NaN ) ).to.throw( Error );
 
-		/**
-		* FUNCTION: badValue( value )
-		*	Supplies an invalid argument to the stream generator.
-		*
-		* @param {*} value - bad value
-		* @returns {function} stream generator
-		*/
 		function badValue( value ) {
 			return function() {
-				rStream().stream( value, 0 );
+				stream.reduce( value );
 			};
-		} // end FUNCTION getStream()
+		}
 	});
 
-	
+	it( 'should throw an error if a reduce function or an accumulator are not provided', function test() {
+		var stream = rStream();
+
+		expect( stream.stream ).to.throw( Error );
+
+		stream.value( 0 );
+		expect( stream.stream ).to.throw( Error );
+
+		stream = rStream();
+		stream.reduce( function ( acc, d ) {
+			return acc + 1;
+		});
+		expect( stream.stream ).to.throw( Error );
+	});
 
 	it( 'should return a single value', function test() {
 		var numData = 1000,
@@ -90,7 +119,10 @@ describe( 'reduce', function tests() {
 		}
 
 		// Create a new reduce stream:
-		stream = rStream().stream( reduce, 0 );
+		stream = rStream()
+			.reduce( reduce )
+			.value( 0 )
+			.stream();
 
 		// Create the stream spec:
 		s = spec( stream )
@@ -134,7 +166,10 @@ describe( 'reduce', function tests() {
 		}
 
 		// Create a new reduce stream:
-		stream = rStream().stream( reduce, 1 );
+		stream = rStream()
+			.reduce( reduce )
+			.value( 1 )
+			.stream();
 
 		// Mock reading from the stream:
 		utils.readStream( stream, onRead );
