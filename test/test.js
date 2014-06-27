@@ -29,33 +29,15 @@ describe( 'reduce', function tests() {
 		expect( rStream ).to.be.a( 'function' );
 	});
 
-	it( 'should provide a method to get the initial accumulator value', function test() {
+	it( 'should provide a method to get the initial accumulator', function test() {
 		var stream = rStream();
-		expect( stream.value ).to.be.a( 'function' );
+		expect( stream.acc ).to.be.a( 'function' );
 	});
 
-	it( 'should provide a method to set the initial accumulator value', function test() {
+	it( 'should provide a method to set the initial accumulator', function test() {
 		var stream = rStream();
-		stream.value( 5 );
-		assert.strictEqual( stream.value(), 5 );
-	});
-
-	it( 'should not allow a non-numeric initial accumulator value', function test() {
-		var stream = rStream();
-		
-		expect( badValue( '5' ) ).to.throw( Error );
-		expect( badValue( [] ) ).to.throw( Error );
-		expect( badValue( {} ) ).to.throw( Error );
-		expect( badValue( null ) ).to.throw( Error );
-		expect( badValue( undefined ) ).to.throw( Error );
-		expect( badValue( NaN ) ).to.throw( Error );
-		expect( badValue( function() {} ) ).to.throw( Error );
-
-		function badValue( value ) {
-			return function() {
-				stream.value( value );
-			};
-		}
+		stream.acc( 5 );
+		assert.strictEqual( stream.acc(), 5 );
 	});
 
 	it( 'should provide a method to get the reduce function', function test() {
@@ -65,8 +47,8 @@ describe( 'reduce', function tests() {
 
 	it( 'should provide a method to set the reduce function', function test() {
 		var stream = rStream();
-		stream.value( 5 );
-		assert.strictEqual( stream.value(), 5 );
+		stream.acc( 5 );
+		assert.strictEqual( stream.acc(), 5 );
 	});
 
 	it( 'should not allow the reducer to be set to anything other than a function', function test() {
@@ -87,18 +69,12 @@ describe( 'reduce', function tests() {
 		}
 	});
 
-	it( 'should throw an error if a reduce function or an accumulator are not provided', function test() {
+	it( 'should throw an error if a reduce function is not set', function test() {
 		var stream = rStream();
 
 		expect( stream.stream ).to.throw( Error );
 
-		stream.value( 0 );
-		expect( stream.stream ).to.throw( Error );
-
-		stream = rStream();
-		stream.reduce( function ( acc, d ) {
-			return acc + 1;
-		});
+		stream.acc( 0 );
 		expect( stream.stream ).to.throw( Error );
 	});
 
@@ -121,7 +97,7 @@ describe( 'reduce', function tests() {
 		// Create a new reduce stream:
 		stream = rStream()
 			.reduce( reduce )
-			.value( 0 )
+			.acc( 0 )
 			.stream();
 
 		// Create the stream spec:
@@ -168,7 +144,7 @@ describe( 'reduce', function tests() {
 		// Create a new reduce stream:
 		stream = rStream()
 			.reduce( reduce )
-			.value( 1 )
+			.acc( 1 )
 			.stream();
 
 		// Mock reading from the stream:
