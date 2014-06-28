@@ -47,8 +47,12 @@ describe( 'reduce', function tests() {
 
 	it( 'should provide a method to set the reduce function', function test() {
 		var stream = rStream();
-		stream.acc( 5 );
-		assert.strictEqual( stream.acc(), 5 );
+		stream.reduce( reduce );
+		assert.strictEqual( stream.reduce(), reduce );
+		return;
+		function reduce( acc, d ) {
+			return d;
+		}
 	});
 
 	it( 'should not allow the reducer to be set to anything other than a function', function test() {
