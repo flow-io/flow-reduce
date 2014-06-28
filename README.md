@@ -4,6 +4,13 @@ flow-reduce
 Through stream which performs a reduction.
 
 
+## Installation
+
+``` bash
+$ npm install flow-reduce
+```
+
+
 ## Examples
 
 ``` javascript
