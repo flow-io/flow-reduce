@@ -1,6 +1,6 @@
 {
   "name": "flow-reduce",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Through stream which performs a data reduction.",
   "author": {
     "name": "Athan Reines",
