@@ -14,35 +14,29 @@ $ npm install flow-reduce
 ## Examples
 
 ``` javascript
-var // Flow reduce stream generator:
+var eventStream = require( 'event-stream' ),
 	rStream = require( 'flow-reduce' );
 
-var data = new Array( 1000 ),
-	stream;
-
 // Create some data...
+var data = new Array( 1000 );
 for ( var i = 0; i < 1000; i++ ) {
 	data[ i ] = Math.random();
 }
 
+// Create a readable stream:
+var readStream = eventStream.readArray( data );
+
 // Create a new stream (counter):
-stream = rStream()
+var stream = rStream()
 	.reduce( function( acc, d ){
 		return acc+1;
 	})
 	.acc( 0 )
 	.stream();
 
-// Add a listener:
-stream.on( 'data', function( data ) {
-	console.log( data );
-});
-
-// Write the data to the stream:
-for ( var j = 0; j < data.length; j++ ) {
-	stream.write( data[ j ] );
-}
-stream.end();
+// Pipe the data:
+readStream.pipe( stream )
+	.pipe( process.stdout );
 ```
 
 ## Tests
