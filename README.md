@@ -26,7 +26,7 @@ for ( var i = 0; i < 1000; i++ ) {
 // Create a readable stream:
 var readStream = eventStream.readArray( data );
 
-// Create a new stream (counter):
+// Create a new reduce stream (counter):
 var stream = rStream()
 	.reduce( function( acc, d ){
 		return acc+1;
@@ -36,6 +36,9 @@ var stream = rStream()
 
 // Pipe the data:
 readStream.pipe( stream )
+	.pipe( eventStream.map( function( d, clbk ) {
+		clbk( null, d.toString() );
+	}))
 	.pipe( process.stdout );
 ```
 
