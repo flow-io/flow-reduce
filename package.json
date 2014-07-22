@@ -18,7 +18,7 @@
   "main": "./lib",
   "repository": {
     "type": "git",
-    "url": "git://github.com/kgryte/flow-reduce.git"
+    "url": "git://github.com/flow-io/flow-reduce.git"
   },
   "keywords": [
     "stream",
@@ -31,7 +31,7 @@
     "flow.io"
   ],
   "bugs": {
-    "url": "https://github.com/kgryte/flow-reduce/issues"
+    "url": "https://github.com/flow-io/flow-reduce/issues"
   },
   "dependencies": {
     "through": "~2.3.4"
